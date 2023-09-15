@@ -105,438 +105,427 @@ class RouterFactory
 
         $this->router->addRoute(
             (new RouteGroup())
-                ->setSettings(['prefix' => '/consent'])
+                ->setSettings(['prefix' => '/consent/v1'])
                 ->setCallback(
                     function () {
-                        (new RouteGroup())
-                            ->setSettings(['prefix' => '/v1'])
-                            ->setCallback(
-                                function () {
-                                    $this->router->addRoute(
-                                        (new RouteUrl(
-                                            '/level1/{uuid}/{consent}',
-                                            function (string $uuid, string $consent) {
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/level1/{uuid}/{consent}',
+                                function (string $uuid, string $consent) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        [
+                                            'consent',
+                                            'level1',
+                                            'v1',
+                                            '--uuid',
+                                            $uuid,
+                                            '--consent',
+                                            $consent,
+                                        ]
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_POST])
+                        );
+
+                        $this->router->addRoute(
+                            (new RouteGroup())
+                                ->setSettings(['prefix' => '/level2'])
+                                ->setCallback(
+                                    function () {
+                                        $this->router->addRoute(
+                                            (new RouteUrl('/list', function () {
+                                                return call_user_func($this->callback, [
+                                                    'list-consent',
+                                                    'level2',
+                                                    'v1',
+                                                    '--token',
+                                                    $this->getToken(),
+                                                ]);
+                                            }))
+                                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                                        );
+                                        $this->router->addRoute(
+                                            (new RouteUrl(
+                                                '/revoke/{consent_uuid}',
+                                                function (string $consent_uuid) {
+                                                    return call_user_func($this->callback, [
+                                                        'revoke',
+                                                        'level2',
+                                                        'v1',
+                                                        '--consent-uuid',
+                                                        $consent_uuid,
+                                                        '--token',
+                                                        $this->getToken(),
+                                                    ]);
+                                                }
+                                            ))
+                                                ->setWhere(['consent_uuid' => $this->uuidMatch])
+                                                ->setRequestMethods([Request::REQUEST_TYPE_PUT])
+                                        );
+                                        $this->router->addRoute(
+                                            (new RouteUrl('/{uuid}', function (string $uuid) {
                                                 return call_user_func(
                                                     $this->callback,
-                                                    [
-                                                        'consent',
-                                                        'level1',
-                                                        'v1',
-                                                        '--uuid',
-                                                        $uuid,
-                                                        '--consent',
-                                                        $consent,
-                                                    ]
+                                                    array_merge(
+                                                        [
+                                                            'consent',
+                                                            'level2',
+                                                            'v1',
+                                                            '--uuid',
+                                                            $uuid,
+                                                            '--token',
+                                                            $this->getToken(),
+                                                        ],
+                                                        $this->applyIfNotEmpty(
+                                                            $this->requestBody,
+                                                            [
+                                                                'consent' => 'consent',
+                                                            ]
+                                                        )
+                                                    )
                                                 );
-                                            }
-                                        ))
-                                            ->setRequestMethods([Request::REQUEST_TYPE_POST])
-                                    );
+                                            }))
+                                                ->setWhere(['uuid' => $this->uuidMatch])
+                                                ->setRequestMethods([Request::REQUEST_TYPE_POST])
+                                        );
+                                    }
+                                )
+                        );
 
-                                    $this->router->addRoute(
-                                        (new RouteGroup())
-                                            ->setSettings(['prefix' => '/level2'])
-                                            ->setCallback(
-                                                function () {
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl('/list', function () {
-                                                            return call_user_func($this->callback, [
+                        $this->router->addRoute(
+                            (new RouteGroup())
+                                ->setSettings(['prefix' => '/level3'])
+                                ->setCallback(
+                                    function () {
+                                        $this->router->addRoute(
+                                            (new RouteUrl(
+                                                '/list/{network}/{wallet}',
+                                                function (string $network, string $wallet) {
+                                                    return call_user_func(
+                                                        $this->callback,
+                                                        array_merge(
+                                                            [
                                                                 'list-consent',
-                                                                'level2',
+                                                                'level3',
                                                                 'v1',
-                                                                '--token',
-                                                                $this->getToken(),
-                                                            ]);
-                                                        }))
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_GET])
-                                                    );
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl(
-                                                            '/revoke/{consent_uuid}',
-                                                            function (string $consent_uuid) {
-                                                                return call_user_func($this->callback, [
-                                                                    'revoke',
-                                                                    'level2',
-                                                                    'v1',
-                                                                    '--consent-uuid',
-                                                                    $consent_uuid,
-                                                                    '--token',
-                                                                    $this->getToken(),
-                                                                ]);
-                                                            }
-                                                        ))
-                                                            ->setWhere(['consent_uuid' => $this->uuidMatch])
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_PUT])
-                                                    );
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl('/{uuid}', function (string $uuid) {
-                                                            return call_user_func(
-                                                                $this->callback,
-                                                                array_merge(
-                                                                    [
-                                                                        'consent',
-                                                                        'level2',
-                                                                        'v1',
-                                                                        '--uuid',
-                                                                        $uuid,
-                                                                        '--token',
-                                                                        $this->getToken(),
-                                                                    ],
-                                                                    $this->applyIfNotEmpty(
-                                                                        $this->requestBody,
-                                                                        [
-                                                                            'consent' => 'consent',
-                                                                        ]
-                                                                    )
-                                                                )
-                                                            );
-                                                        }))
-                                                            ->setWhere(['uuid' => $this->uuidMatch])
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_POST])
+                                                                '--network',
+                                                                $network,
+                                                                '--wallet',
+                                                                $wallet,
+                                                            ],
+                                                            $this->applyIfNotEmpty(
+                                                                $this->router->getRequest()
+                                                                    ->getUrl()
+                                                                    ->getParams(),
+                                                                ['signature' => 'signature']
+                                                            )
+                                                        )
                                                     );
                                                 }
-                                            )
-                                    );
+                                            ))
+                                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                                        );
+                                        $this->router->addRoute(
+                                            (new RouteUrl(
+                                                '/revoke/{consent_uuid}/{network}/{wallet}',
+                                                function (
+                                                    string $consent_uuid,
+                                                    string $network,
+                                                    string $wallet
+                                                ) {
+                                                    return call_user_func(
+                                                        $this->callback,
+                                                        array_merge(
+                                                            [
+                                                                'revoke',
+                                                                'level3',
+                                                                'v1',
+                                                                '--consent-uuid',
+                                                                $consent_uuid,
+                                                                '--network',
+                                                                $network,
+                                                                '--wallet',
+                                                                $wallet,
+                                                            ],
+                                                            $this->applyIfNotEmpty($this->requestBody, [
+                                                                'signature' => 'signature',
+                                                            ])
+                                                        )
+                                                    );
+                                                }
+                                            ))
+                                                ->setWhere(['consent_uuid' => $this->uuidMatch])
+                                                ->setRequestMethods([Request::REQUEST_TYPE_PUT])
+                                        );
+                                        $this->router->addRoute(
+                                            (new RouteUrl(
+                                                '/{uuid}/{network}/{wallet}',
+                                                function (string $uuid, string $network, string $wallet) {
+                                                    return call_user_func(
+                                                        $this->callback,
+                                                        array_merge(
+                                                            [
+                                                                'consent',
+                                                                'level3',
+                                                                'v1',
+                                                                '--visitor-uuid',
+                                                                $uuid,
+                                                                '--network',
+                                                                $network,
+                                                                '--wallet',
+                                                                $wallet,
+                                                            ],
+                                                            $this->applyIfNotEmpty($this->requestBody, [
+                                                                'consent' => 'consent',
+                                                                'signature' => 'signature',
+                                                            ])
+                                                        )
+                                                    );
+                                                }
+                                            ))
+                                                ->setWhere(['uuid' => $this->uuidMatch])
+                                                ->setRequestMethods([Request::REQUEST_TYPE_POST])
+                                        );
+                                    }
+                                )
+                        );
 
-                                    $this->router->addRoute(
-                                        (new RouteGroup())
-                                            ->setSettings(['prefix' => '/level3'])
-                                            ->setCallback(
-                                                function () {
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl(
-                                                            '/list/{network}/{wallet}',
-                                                            function (string $network, string $wallet) {
-                                                                return call_user_func(
-                                                                    $this->callback,
-                                                                    array_merge(
-                                                                        [
-                                                                            'list-consent',
-                                                                            'level3',
-                                                                            'v1',
-                                                                            '--network',
-                                                                            $network,
-                                                                            '--wallet',
-                                                                            $wallet,
-                                                                        ],
-                                                                        $this->applyIfNotEmpty(
-                                                                            $this->router->getRequest()
-                                                                                ->getUrl()
-                                                                                ->getParams(),
-                                                                            ['signature' => 'signature']
-                                                                        )
-                                                                    )
-                                                                );
-                                                            }
-                                                        ))
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_GET])
-                                                    );
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl(
-                                                            '/revoke/{consent_uuid}/{network}/{wallet}',
-                                                            function (
-                                                                string $consent_uuid,
-                                                                string $network,
-                                                                string $wallet
-                                                            ) {
-                                                                return call_user_func(
-                                                                    $this->callback,
-                                                                    array_merge(
-                                                                        [
-                                                                            'revoke',
-                                                                            'level3',
-                                                                            'v1',
-                                                                            '--consent-uuid',
-                                                                            $consent_uuid,
-                                                                            '--network',
-                                                                            $network,
-                                                                            '--wallet',
-                                                                            $wallet,
-                                                                        ],
-                                                                        $this->applyIfNotEmpty($this->requestBody, [
-                                                                            'signature' => 'signature',
-                                                                        ])
-                                                                    )
-                                                                );
-                                                            }
-                                                        ))
-                                                            ->setWhere(['consent_uuid' => $this->uuidMatch])
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_PUT])
-                                                    );
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl(
-                                                            '/{uuid}/{network}/{wallet}',
-                                                            function (string $uuid, string $network, string $wallet) {
-                                                                return call_user_func(
-                                                                    $this->callback,
-                                                                    array_merge(
-                                                                        [
-                                                                            'consent',
-                                                                            'level3',
-                                                                            'v1',
-                                                                            '--visitor-uuid',
-                                                                            $uuid,
-                                                                            '--network',
-                                                                            $network,
-                                                                            '--wallet',
-                                                                            $wallet,
-                                                                        ],
-                                                                        $this->applyIfNotEmpty($this->requestBody, [
-                                                                            'consent' => 'consent',
-                                                                            'signature' => 'signature',
-                                                                        ])
-                                                                    )
-                                                                );
-                                                            }
-                                                        ))
-                                                            ->setWhere(['uuid' => $this->uuidMatch])
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_POST])
+                        $this->router->addRoute(
+                            (new RouteGroup())
+                                ->setSettings(['prefix' => '/level4'])
+                                ->setCallback(
+                                    function () {
+                                        $this->router->addRoute(
+                                            (new RouteUrl(
+                                                '/list/{network}/{web3id}/{wallet}',
+                                                function (string $network, string $web3id, string $wallet) {
+                                                    return call_user_func(
+                                                        $this->callback,
+                                                        array_merge(
+                                                            [
+                                                                'list-consent',
+                                                                'level4',
+                                                                'v1',
+                                                                '--network',
+                                                                $network,
+                                                                '--wallet',
+                                                                $wallet,
+                                                                '--web3id',
+                                                                $web3id,
+                                                            ],
+                                                            $this->applyIfNotEmpty(
+                                                                $this->router->getRequest()
+                                                                    ->getUrl()
+                                                                    ->getParams(),
+                                                                [
+                                                                    'signature' => 'signature',
+                                                                ]
+                                                            )
+                                                        )
                                                     );
                                                 }
-                                            )
-                                    );
+                                            ))
+                                                ->setWhere([
+                                                    'web3id' => '[\@\w-]+',
+                                                ])
+                                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                                        );
+                                        $this->router->addRoute(
+                                            (new RouteUrl(
+                                                '/revoke/{consent_uuid}/{network}/{web3id}/{wallet}',
+                                                function (
+                                                    string $consent_uuid,
+                                                    string $network,
+                                                    string $web3id,
+                                                    string $wallet
+                                                ) {
+                                                    return call_user_func(
+                                                        $this->callback,
+                                                        array_merge(
+                                                            [
+                                                                'revoke',
+                                                                'level4',
+                                                                'v1',
+                                                                '--consent-uuid',
+                                                                $consent_uuid,
+                                                                '--network',
+                                                                $network,
+                                                                '--wallet',
+                                                                $wallet,
+                                                                '--web3id',
+                                                                $web3id,
+                                                            ],
+                                                            $this->applyIfNotEmpty($this->requestBody, [
+                                                                'signature' => 'signature',
+                                                            ])
+                                                        )
+                                                    );
+                                                }
+                                            ))
+                                                ->setWhere([
+                                                    'consent_uuid' => $this->uuidMatch,
+                                                    'web3id' => '[\@\w-]+',
+                                                ])
+                                                ->setRequestMethods([Request::REQUEST_TYPE_PUT])
+                                        );
+                                        $this->router->addRoute(
+                                            (new RouteUrl(
+                                                '/{uuid}/{network}/{web3id}/{wallet}',
+                                                function (
+                                                    string $uuid,
+                                                    string $network,
+                                                    string $web3id,
+                                                    string $wallet
+                                                ) {
+                                                    return call_user_func(
+                                                        $this->callback,
+                                                        array_merge(
+                                                            [
+                                                                'consent',
+                                                                'level4',
+                                                                'v1',
+                                                                '--visitor-uuid',
+                                                                $uuid,
+                                                                '--network',
+                                                                $network,
+                                                                '--wallet',
+                                                                $wallet,
+                                                                '--web3id',
+                                                                $web3id,
+                                                            ],
+                                                            $this->applyIfNotEmpty($this->requestBody, [
+                                                                'consent' => 'consent',
+                                                                'signature' => 'signature',
+                                                            ])
+                                                        )
+                                                    );
+                                                }
+                                            ))
+                                                ->setWhere([
+                                                    'uuid' => $this->uuidMatch,
+                                                    'web3id' => '[\@\w-]+',
+                                                ])
+                                                ->setRequestMethods([Request::REQUEST_TYPE_POST])
+                                        );
+                                    }
+                                )
+                        );
+                    }
+                )
+        );
 
-                                    $this->router->addRoute(
-                                        (new RouteGroup())
-                                            ->setSettings(['prefix' => '/level4'])
-                                            ->setCallback(
-                                                function () {
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl(
-                                                            '/list/{network}/{web3id}/{wallet}',
-                                                            function (string $network, string $web3id, string $wallet) {
-                                                                return call_user_func(
-                                                                    $this->callback,
-                                                                    array_merge(
-                                                                        [
-                                                                            'list-consent',
-                                                                            'level4',
-                                                                            'v1',
-                                                                            '--network',
-                                                                            $network,
-                                                                            '--wallet',
-                                                                            $wallet,
-                                                                            '--web3id',
-                                                                            $web3id,
-                                                                        ],
-                                                                        $this->applyIfNotEmpty(
-                                                                            $this->router->getRequest()
-                                                                                ->getUrl()
-                                                                                ->getParams(),
-                                                                            [
-                                                                                'signature' => 'signature',
-                                                                            ]
-                                                                        )
-                                                                    )
-                                                                );
-                                                            }
-                                                        ))
-                                                            ->setWhere([
-                                                                'web3id' => '[\@\w-]+',
-                                                            ])
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_GET])
-                                                    );
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl(
-                                                            '/revoke/{consent_uuid}/{network}/{web3id}/{wallet}',
-                                                            function (
-                                                                string $consent_uuid,
-                                                                string $network,
-                                                                string $web3id,
-                                                                string $wallet
-                                                            ) {
-                                                                return call_user_func(
-                                                                    $this->callback,
-                                                                    array_merge(
-                                                                        [
-                                                                            'revoke',
-                                                                            'level4',
-                                                                            'v1',
-                                                                            '--consent-uuid',
-                                                                            $consent_uuid,
-                                                                            '--network',
-                                                                            $network,
-                                                                            '--wallet',
-                                                                            $wallet,
-                                                                            '--web3id',
-                                                                            $web3id,
-                                                                        ],
-                                                                        $this->applyIfNotEmpty($this->requestBody, [
-                                                                            'signature' => 'signature',
-                                                                        ])
-                                                                    )
-                                                                );
-                                                            }
-                                                        ))
-                                                            ->setWhere([
-                                                                'consent_uuid' => $this->uuidMatch,
-                                                                'web3id' => '[\@\w-]+',
-                                                            ])
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_PUT])
-                                                    );
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl(
-                                                            '/{uuid}/{network}/{web3id}/{wallet}',
-                                                            function (
-                                                                string $uuid,
-                                                                string $network,
-                                                                string $web3id,
-                                                                string $wallet
-                                                            ) {
-                                                                return call_user_func(
-                                                                    $this->callback,
-                                                                    array_merge(
-                                                                        [
-                                                                            'consent',
-                                                                            'level4',
-                                                                            'v1',
-                                                                            '--visitor-uuid',
-                                                                            $uuid,
-                                                                            '--network',
-                                                                            $network,
-                                                                            '--wallet',
-                                                                            $wallet,
-                                                                            '--web3id',
-                                                                            $web3id,
-                                                                        ],
-                                                                        $this->applyIfNotEmpty($this->requestBody, [
-                                                                            'consent' => 'consent',
-                                                                            'signature' => 'signature',
-                                                                        ])
-                                                                    )
-                                                                );
-                                                            }
-                                                        ))
-                                                            ->setWhere([
-                                                                'uuid' => $this->uuidMatch,
-                                                                'web3id' => '[\@\w-]+',
-                                                            ])
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_POST])
-                                                    );
-                                                }
+        $this->router->addRoute(
+            (new RouteGroup())
+                ->setSettings(['prefix' => '/consent/v2/level4'])
+                ->setCallback(
+                    function () {
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/list/{network}/{wallet}',
+                                function (string $network, string $wallet) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'list-consent',
+                                                'level4',
+                                                'v2',
+                                                '--network',
+                                                $network,
+                                                '--wallet',
+                                                $wallet,
+                                                '--web3id',
+                                                $this->getToken(),
+                                            ],
+                                            $this->applyIfNotEmpty(
+                                                $this->router->getRequest()
+                                                    ->getUrl()
+                                                    ->getParams(),
+                                                [
+                                                    'signature' => 'signature',
+                                                ]
                                             )
+                                        )
                                     );
                                 }
-                            );
-                        (new RouteGroup())
-                            ->setSettings(['prefix' => '/v2'])
-                            ->setCallback(
-                                function () {
-                                    $this->router->addRoute(
-                                        (new RouteGroup())
-                                            ->setSettings(['prefix' => '/level4'])
-                                            ->setCallback(
-                                                function () {
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl(
-                                                            '/list/{network}/{wallet}',
-                                                            function (string $network, string $wallet) {
-                                                                return call_user_func(
-                                                                    $this->callback,
-                                                                    array_merge(
-                                                                        [
-                                                                            'list-consent',
-                                                                            'level4',
-                                                                            'v2',
-                                                                            '--network',
-                                                                            $network,
-                                                                            '--wallet',
-                                                                            $wallet,
-                                                                            '--web3id',
-                                                                            $this->getToken(),
-                                                                        ],
-                                                                        $this->applyIfNotEmpty(
-                                                                            $this->router->getRequest()
-                                                                                ->getUrl()
-                                                                                ->getParams(),
-                                                                            [
-                                                                                'signature' => 'signature',
-                                                                            ]
-                                                                        )
-                                                                    )
-                                                                );
-                                                            }
-                                                        ))
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_GET])
-                                                    );
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl(
-                                                            '/revoke/{consent_uuid}/{network}/{wallet}',
-                                                            function (
-                                                                string $consent_uuid,
-                                                                string $network,
-                                                                string $wallet
-                                                            ) {
-                                                                return call_user_func(
-                                                                    $this->callback,
-                                                                    array_merge(
-                                                                        [
-                                                                            'revoke',
-                                                                            'level4',
-                                                                            'v2',
-                                                                            '--consent-uuid',
-                                                                            $consent_uuid,
-                                                                            '--network',
-                                                                            $network,
-                                                                            '--wallet',
-                                                                            $wallet,
-                                                                            '--web3id',
-                                                                            $this->getToken(),
-                                                                        ],
-                                                                        $this->applyIfNotEmpty($this->requestBody, [
-                                                                            'signature' => 'signature',
-                                                                        ])
-                                                                    )
-                                                                );
-                                                            }
-                                                        ))
-                                                            ->setWhere([
-                                                                'consent_uuid' => $this->uuidMatch,
-                                                            ])
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_PUT])
-                                                    );
-                                                    $this->router->addRoute(
-                                                        (new RouteUrl(
-                                                            '/{uuid}/{network}/{wallet}',
-                                                            function (
-                                                                string $uuid,
-                                                                string $network,
-                                                                string $wallet
-                                                            ) {
-                                                                return call_user_func(
-                                                                    $this->callback,
-                                                                    array_merge(
-                                                                        [
-                                                                            'consent',
-                                                                            'level4',
-                                                                            'v2',
-                                                                            '--visitor-uuid',
-                                                                            $uuid,
-                                                                            '--network',
-                                                                            $network,
-                                                                            '--wallet',
-                                                                            $wallet,
-                                                                            '--web3id',
-                                                                            $this->getToken(),
-                                                                        ],
-                                                                        $this->applyIfNotEmpty($this->requestBody, [
-                                                                            'consent' => 'consent',
-                                                                            'signature' => 'signature',
-                                                                        ])
-                                                                    )
-                                                                );
-                                                            }
-                                                        ))
-                                                            ->setWhere([
-                                                                'uuid' => $this->uuidMatch,
-                                                            ])
-                                                            ->setRequestMethods([Request::REQUEST_TYPE_POST])
-                                                    );
-                                                }
-                                            )
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/revoke/{consent_uuid}/{network}/{wallet}',
+                                function (
+                                    string $consent_uuid,
+                                    string $network,
+                                    string $wallet
+                                ) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'revoke',
+                                                'level4',
+                                                'v2',
+                                                '--consent-uuid',
+                                                $consent_uuid,
+                                                '--network',
+                                                $network,
+                                                '--wallet',
+                                                $wallet,
+                                                '--web3id',
+                                                $this->getToken(),
+                                            ],
+                                            $this->applyIfNotEmpty($this->requestBody, [
+                                                'signature' => 'signature',
+                                            ])
+                                        )
                                     );
                                 }
-                            );
+                            ))
+                                ->setWhere([
+                                    'consent_uuid' => $this->uuidMatch,
+                                ])
+                                ->setRequestMethods([Request::REQUEST_TYPE_PUT])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/{uuid}/{network}/{wallet}',
+                                function (
+                                    string $uuid,
+                                    string $network,
+                                    string $wallet
+                                ) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'consent',
+                                                'level4',
+                                                'v2',
+                                                '--visitor-uuid',
+                                                $uuid,
+                                                '--network',
+                                                $network,
+                                                '--wallet',
+                                                $wallet,
+                                                '--web3id',
+                                                $this->getToken(),
+                                            ],
+                                            $this->applyIfNotEmpty($this->requestBody, [
+                                                'consent' => 'consent',
+                                                'signature' => 'signature',
+                                            ])
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setWhere([
+                                    'uuid' => $this->uuidMatch,
+                                ])
+                                ->setRequestMethods([Request::REQUEST_TYPE_POST])
+                        );
                     }
                 )
         );
