@@ -1,0 +1,19 @@
+{
+    "name": "vshandak/aesirx_analytics_lib",
+    "description": "Aesirx analytics library.",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "AesirxAnalyticsLib\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.2",
+        "symfony/process": "^5.4",
+        "pecee/simple-router": "^5",
+        "ext-json": "*"
+    }
+}
