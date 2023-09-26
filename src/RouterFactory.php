@@ -94,6 +94,8 @@ class RouterFactory
                             $network,
                             '--address',
                             $address,
+                            '--domain',
+                            $this->router->getRequest()->getHost(),
                         ],
                         $this->applyIfNotEmpty($this->requestBody, [
                             'text' => 'text',
