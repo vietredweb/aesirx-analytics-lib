@@ -63,7 +63,7 @@ class AesirxAnalyticsCli
         $arch = $this->getSupportedArch();
         file_put_contents(
             $this->cliPath,
-            fopen("https://github.com/aesirxio/analytics/releases/download/2.0.1/analytics-cli-linux-" . $arch, 'r')
+            fopen("https://github.com/aesirxio/analytics/releases/download/2.2.2/analytics-cli-linux-" . $arch, 'r')
         );
         chmod($this->cliPath, 0755);
         $this->processAnalytics(['migrate']);
