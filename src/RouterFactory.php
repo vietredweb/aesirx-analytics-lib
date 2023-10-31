@@ -762,6 +762,110 @@ class RouterFactory
                     }
                 )
         );
+
+        $this->router->addRoute(
+            (new RouteGroup())
+                ->setSettings([
+                    'prefix' => '/conversion/v1',
+                    'middleware' => [$permissionCheckMiddleware],
+                ])
+                ->setCallback(
+                    function () {
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/products/{start_date}/{end_date}',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'conversion',
+                                                'products',
+                                                'v1',
+                                                '--start',
+                                                $start,
+                                                '--end',
+                                                $end
+                                            ],
+                                            $this->applyListParams()
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/products-chart/{start_date}/{end_date}',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'conversion',
+                                                'products-chart',
+                                                'v1',
+                                                '--start',
+                                                $start,
+                                                '--end',
+                                                $end
+                                            ],
+                                            $this->applyListParams()
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/statistics/{start_date}/{end_date}',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'conversion',
+                                                'statistics',
+                                                'v1',
+                                                '--start',
+                                                $start,
+                                                '--end',
+                                                $end
+                                            ],
+                                            $this->applyListParams()
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/statistics-chart/{start_date}/{end_date}',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'conversion',
+                                                'statistics-chart',
+                                                'v1',
+                                                '--start',
+                                                $start,
+                                                '--end',
+                                                $end
+                                            ],
+                                            $this->applyListParams()
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                    }
+                )
+        );
     }
 
     private function getToken(): string
