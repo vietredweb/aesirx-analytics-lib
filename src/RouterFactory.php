@@ -814,6 +814,11 @@ class RouterFactory
                                 'events',
                                 'events-name-type',
                                 'attribute-date',
+                                'user-types',
+                                'outlinks',
+                                'channels',
+                                'user-flows',
+                                'regions',
                             ] as $statistic
                         ) {
                             $this->router->addRoute(
