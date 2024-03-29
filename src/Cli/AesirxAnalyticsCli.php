@@ -61,11 +61,9 @@ class AesirxAnalyticsCli
     public function downloadAnalyticsCli(): void
     {
         $arch = $this->getSupportedArch();
-        $response = wp_remote_get( 'https://github.com/aesirxio/analytics/releases/download/2.2.4/analytics-cli-linux-' . $arch );
-        $body     = wp_remote_retrieve_body( $response );
         file_put_contents(
             $this->cliPath,
-            $body
+            fopen("https://github.com/aesirxio/analytics/releases/download/2.2.4/analytics-cli-linux-" . $arch, 'r')
         );
         chmod($this->cliPath, 0755);
         $this->processAnalytics(['migrate']);
