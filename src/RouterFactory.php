@@ -819,6 +819,7 @@ class RouterFactory
                                 'channels',
                                 'user-flows',
                                 'regions',
+                                'referrers',
                             ] as $statistic
                         ) {
                             $this->router->addRoute(
