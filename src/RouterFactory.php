@@ -1034,9 +1034,9 @@ class RouterFactory
         $command = [];
 
         if (!empty($this->requestBody['attributes'] ?? [])) {
-            foreach ($this->requestBody['attributes'] as $name => $value) {
+            foreach ($this->requestBody['attributes'] as $key => $attribute) {
                 $command[] = '--attributes';
-                $command[] = $name . '=' . $value;
+                $command[] = $attribute['name'] . '=' . $attribute['value'];
             }
         }
 
