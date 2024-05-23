@@ -10,7 +10,7 @@
     },
     "require": {
         "php": ">=7.2",
-        "symfony/process": "^5",
+        "symfony/process": "^5|^6",
         "pecee/simple-router": "^5",
         "ext-json": "*"
     }
