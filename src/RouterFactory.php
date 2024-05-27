@@ -168,7 +168,7 @@ class RouterFactory
                                         array_merge(
                                             [
                                                 'list-consent-statistics',
-                                                'total-consents-by-date',
+                                                'all',
                                                 'v1',
                                                 '--start',
                                                 $start,
