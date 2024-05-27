@@ -107,87 +107,6 @@ class RouterFactory
 
         $this->router->addRoute(
             (new RouteGroup())
-                ->setSettings([
-                    'prefix' => '/consents/v1',
-                    'middleware' => [$permissionCheckMiddleware],
-                ])
-                ->setCallback(
-                    function () {
-                        $this->router->addRoute(
-                            (new RouteUrl(
-                                '/{start_date}/{end_date}/date',
-                                function (string $start, string $end) {
-                                    return call_user_func(
-                                        $this->callback,
-                                        array_merge(
-                                            [
-                                                'list-consent-statistics',
-                                                'total-consents-by-date',
-                                                'v1',
-                                                '--start',
-                                                $start,
-                                                '--end',
-                                                $end
-                                            ],
-                                            $this->applyListParams()
-                                        )
-                                    );
-                                }
-                            ))
-                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
-                        );
-                        $this->router->addRoute(
-                            (new RouteUrl(
-                                '/{start_date}/{end_date}/tier',
-                                function (string $start, string $end) {
-                                    return call_user_func(
-                                        $this->callback,
-                                        array_merge(
-                                            [
-                                                'list-consent-statistics',
-                                                'total-tiers-by-date',
-                                                'v1',
-                                                '--start',
-                                                $start,
-                                                '--end',
-                                                $end
-                                            ],
-                                            $this->applyListParams()
-                                        )
-                                    );
-                                }
-                            ))
-                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
-                        );
-                        $this->router->addRoute(
-                            (new RouteUrl(
-                                '/{start_date}/{end_date}',
-                                function (string $start, string $end) {
-                                    return call_user_func(
-                                        $this->callback,
-                                        array_merge(
-                                            [
-                                                'list-consent-statistics',
-                                                'all',
-                                                'v1',
-                                                '--start',
-                                                $start,
-                                                '--end',
-                                                $end
-                                            ],
-                                            $this->applyListParams()
-                                        )
-                                    );
-                                }
-                            ))
-                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
-                        );
-                    }
-                )
-        );
-
-        $this->router->addRoute(
-            (new RouteGroup())
                 ->setSettings(['prefix' => '/consent/v1'])
                 ->setCallback(
                     function () {
@@ -754,6 +673,75 @@ class RouterFactory
                 ->setSettings(['middleware' => [$permissionCheckMiddleware]])
                 ->setCallback(
                     function () {
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/consents/v1/{start_date}/{end_date}/date',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'list-consent-statistics',
+                                                'total-consents-by-date',
+                                                'v1',
+                                                '--start',
+                                                $start,
+                                                '--end',
+                                                $end
+                                            ],
+                                            $this->applyListParams()
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/consents/v1/{start_date}/{end_date}/tier',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'list-consent-statistics',
+                                                'total-tiers-by-date',
+                                                'v1',
+                                                '--start',
+                                                $start,
+                                                '--end',
+                                                $end
+                                            ],
+                                            $this->applyListParams()
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/consents/v1/{start_date}/{end_date}',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'list-consent-statistics',
+                                                'all',
+                                                'v1',
+                                                '--start',
+                                                $start,
+                                                '--end',
+                                                $end
+                                            ],
+                                            $this->applyListParams()
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
                         $this->router->addRoute(
                             (new RouteUrl('/flow/v1/{flow_uuid}', function (string $flowUuid) {
                                 return call_user_func(
