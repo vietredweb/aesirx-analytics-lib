@@ -773,6 +773,18 @@ class RouterFactory
                                 ->setRequestMethods([Request::REQUEST_TYPE_GET])
                         );
                         $this->router->addRoute(
+                            (new RouteUrl('/flow/v1/{start_date}/{end_date}/date', function (string $start, string $end) {
+                                return call_user_func(
+                                    $this->callback,
+                                    array_merge(
+                                        ['get', 'flows-date', 'v1', '--start', $start, '--end', $end],
+                                        $this->applyListParams()
+                                    )
+                                );
+                            }))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
                             (new RouteUrl('/visitor/v1/{start_date}/{end_date}', function (string $start, string $end) {
                                 return call_user_func(
                                     $this->callback,
