@@ -175,7 +175,7 @@ class RouterFactory
                                                             'consent',
                                                             'level2',
                                                             'v1',
-                                                            '--uuid',
+                                                            '--visitor-uuid',
                                                             $uuid,
                                                             '--token',
                                                             $this->getToken(),
