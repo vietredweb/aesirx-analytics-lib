@@ -753,7 +753,8 @@ class RouterFactory
                                                 ->getUrl()
                                                 ->getParams(),
                                             ['with' => 'with']
-                                        )
+                                        ),
+                                        $this->applyListParams()
                                     )
                                 );
                             }))
