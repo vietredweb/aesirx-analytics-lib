@@ -79,39 +79,160 @@ class AesirxAnalyticsCli
      */
     public function processAnalytics(array $command, bool $makeExecutable = true): Process
     {
-        if (!$this->analyticsCliExists()) {
-            throw new RuntimeException('CLI analytics library not found');
-        }
+        if ($command[0] == 'statistics') {
 
-        // Plugin probably updated, we need to make sure it's executable and database is up-to-date
-        if ($makeExecutable && 0755 !== (fileperms($this->cliPath) & 0777)) {
-            chmod($this->cliPath, 0755);
-            if ($command != ['migrate']) {
-                $this->processAnalytics(['migrate'], false);
+            switch ($command[1]) {
+                case 'attributes':
+                    $class = new \AesirX_Analytics_Get_Attribute_Value();
+                    break;
+
+                case 'attribute-date':
+                    $class = new \AesirX_Analytics_Get_Attribute_Value_Date();
+                    break;
+
+                case 'channels':
+                    $class = new \AesirX_Analytics_Get_All_Channels();
+                    break;
+
+                case 'cities':
+                    $class = new \AesirX_Analytics_Get_All_Cities();
+                    break;
+
+                case 'countries':
+                    $class = new \AesirX_Analytics_Get_All_Countries();
+                    break;
+
+                case 'regions':
+                    $class = new \AesirX_Analytics_Get_All_Regions();
+                    break;
+
+                case 'browserversions':
+                    $class = new \AesirX_Analytics_Get_All_Browser_Versions();
+                    break;
+
+                case 'browsers':
+                    $class = new \AesirX_Analytics_Get_All_Browsers();
+                    break;
+
+                case 'metrics':
+                    $class = new \AesirX_Analytics_Get_Metrics_All();
+                    break;
+
+                case 'visitors':
+                    $class = new \AesirX_Analytics_Get_All_Visitors();
+                    break;
+
+                case 'devices':
+                    $class = new \AesirX_Analytics_Get_All_Devices();
+                    break;
+
+                case 'pages':
+                    $class = new \AesirX_Analytics_Get_All_Pages();
+                    break;
+                    
+                case 'referrers':
+                    $class = new \AesirX_Analytics_Get_All_Referrers();
+                    break;
+
+                case 'events-name-type':
+                    $class = new \AesirX_Analytics_Get_All_Event_Name_Type();
+                    break;
+
+                case 'attribute':
+                    $class = new \AesirX_Analytics_Get_All_Attribute();
+                    break;
+                
+                case 'visits':
+                    $class = new \AesirX_Analytics_Get_All_Events();
+                    break;
+                
+                case 'outlinks':
+                    $class = new \AesirX_Analytics_Get_All_Outlinks();
+                    break;
+
+                case 'events':
+                    $class = new \AesirX_Analytics_Get_List_Events();
+                    break;
+                
+                case 'languages':
+                    $class = new \AesirX_Analytics_Get_All_Languages();
+                    break;
+                
+                case 'isps':
+                    $class = new \AesirX_Analytics_Get_All_Languages();
+                    break;
+                
+                default:
+                    $class = new \AesirX_Analytics_Not_Found();
+                    break;
             }
         }
 
-        $process = new Process(array_merge([$this->cliPath], $command), null, $this->env->getData());
-        $process->run();
-        if (!$process->isSuccessful()) {
-            $message = $process->getErrorOutput();
-            $decoded = json_decode($message);
-            $type = null;
+        if ($command[0] == 'get') {
 
-            if (
-                json_last_error() === JSON_ERROR_NONE
-                && $process->getExitCode() == 65
-            ) {
-                if (!empty($decoded->message)) {
-                    $message = $decoded->message;
-                }
-                if (!empty($decoded->error_type)) {
-                    $type = $decoded->error_type;
-                }
+            switch ($command[1]) {
+                case 'events':
+                    $class = new \AesirX_Analytics_Get_All_Events_Name();
+                    break;
+                
+                case 'flows':
+                    $class = new \AesirX_Analytics_Get_All_Flows();
+                    break;
+                
+                default:
+                    $class = new \AesirX_Analytics_Not_Found();
+                    break;
             }
-            throw new ExceptionWithErrorType($message, $type);
         }
 
-        return $process;
+        if ($command[0] == 'list-consent-statistics') {
+
+            switch ($command[1]) {
+                case 'all':
+                    $class = new \AesirX_Analytics_Get_All_Consents();
+                    break;
+
+                case 'total-consents-by-date':
+                    $class = new \AesirX_Analytics_Get_Total_Consent_Per_Day();
+                    break;
+                
+                case 'total-tiers-by-date':
+                    $class = new \AesirX_Analytics_Get_Total_Consent_Tier();
+                    break;
+                
+                default:
+                    $class = new \AesirX_Analytics_Not_Found();
+                    break;
+            }
+        }
+
+        if ($command[0] == 'conversion') {
+
+            switch ($command[1]) {
+                case 'products':
+                    $class = new \AesirX_Analytics_Get_Conversion_Product();
+                    break;
+
+                case 'products-chart':
+                    $class = new \AesirX_Analytics_Get_Conversion_Product_Chart();
+                    break;
+                
+                case 'statistics':
+                    $class = new \AesirX_Analytics_Get_Conversion_Statistic();
+                    break;
+                
+                case 'statistics-chart':
+                    $class = new \AesirX_Analytics_Get_Conversion_Statistic_Chart();
+                    break;
+                
+                default:
+                    $class = new \AesirX_Analytics_Not_Found();
+                    break;
+            }
+        }
+
+        $data = $class->aesirx_analytics_mysql_execute();  
+
+        return json_encode($data);
     }
 }
