@@ -871,8 +871,10 @@ class RouterFactory
                                                 'products',
                                                 'v1',
                                                 '--start',
+                                                "start" => $start,
                                                 $start,
                                                 '--end',
+                                                "end" => $end,
                                                 $end
                                             ],
                                             $this->applyListParams()
@@ -970,7 +972,8 @@ class RouterFactory
 
     private function applyIfNotEmpty(array $request, array $fields): array
     {
-        $command = [];
+        $command['request'] = $request;
+        $command['fields'] = $fields;
 
         foreach ($fields as $from => $to) {
             if (array_key_exists($from, $request)) {
@@ -986,7 +989,7 @@ class RouterFactory
 
     private function applyListParams(): array
     {
-        $command = [];
+        $command = $this->router->getRequest()->getUrl()->getParams();
 
         foreach (
             $this->router->getRequest()
@@ -1035,6 +1038,7 @@ class RouterFactory
         $command = [];
 
         if (!empty($this->requestBody['attributes'] ?? [])) {
+            $command[] = $this->requestBody['attributes'];
             foreach ($this->requestBody['attributes'] as $key => $attribute) {
                 $command[] = '--attributes';
                 $command[] = $attribute['name'] . '=' . $attribute['value'];
