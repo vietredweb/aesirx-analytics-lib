@@ -92,10 +92,13 @@ class RouterFactory
                             'nonce',
                             '--network',
                             $network,
+                            'network' => $network,
                             '--address',
                             $address,
+                            'address' => $address,
                             '--domain',
                             $this->router->getRequest()->getHost(),
+                            'domain' => $this->router->getRequest()->getHost(),
                         ],
                         $this->applyIfNotEmpty($this->requestBody, [
                             'text' => 'text',
@@ -122,8 +125,10 @@ class RouterFactory
                                             'v1',
                                             '--uuid',
                                             $uuid,
+                                            'uuid' => $uuid,
                                             '--consent',
                                             $consent,
+                                            'consent' => $consent,
                                         ]
                                     );
                                 }
@@ -144,6 +149,7 @@ class RouterFactory
                                                     'v1',
                                                     '--token',
                                                     $this->getToken(),
+                                                    'token' => $this->getToken(),
                                                 ]);
                                             }))
                                                 ->setRequestMethods([Request::REQUEST_TYPE_GET])
@@ -158,8 +164,10 @@ class RouterFactory
                                                         'v1',
                                                         '--consent-uuid',
                                                         $consent_uuid,
+                                                        'consent_uuid' => $consent_uuid,
                                                         '--token',
                                                         $this->getToken(),
+                                                        'token' => $this->getToken(),
                                                     ]);
                                                 }
                                             ))
@@ -175,10 +183,12 @@ class RouterFactory
                                                             'consent',
                                                             'level2',
                                                             'v1',
-                                                            '--visitor-uuid',
+                                                            '--uuid',
                                                             $uuid,
+                                                            'visitor_uuid' => $uuid,
                                                             '--token',
                                                             $this->getToken(),
+                                                            'token' => $this->getToken(),
                                                         ],
                                                         $this->applyIfNotEmpty(
                                                             $this->requestBody,
@@ -214,8 +224,10 @@ class RouterFactory
                                                                 'v1',
                                                                 '--network',
                                                                 $network,
+                                                                'network' => $network,
                                                                 '--wallet',
                                                                 $wallet,
+                                                                'wallet' => $wallet,
                                                             ],
                                                             $this->applyIfNotEmpty(
                                                                 $this->router->getRequest()
@@ -246,10 +258,13 @@ class RouterFactory
                                                                 'v1',
                                                                 '--consent-uuid',
                                                                 $consent_uuid,
+                                                                'consent_uuid' => $consent_uuid,
                                                                 '--network',
                                                                 $network,
+                                                                'network' => $network,
                                                                 '--wallet',
                                                                 $wallet,
+                                                                'wallet' => $wallet,
                                                             ],
                                                             $this->applyIfNotEmpty($this->requestBody, [
                                                                 'signature' => 'signature',
@@ -274,10 +289,13 @@ class RouterFactory
                                                                 'v1',
                                                                 '--visitor-uuid',
                                                                 $uuid,
+                                                                'visitor_uuid' => $uuid,
                                                                 '--network',
                                                                 $network,
+                                                                'network' => $network,
                                                                 '--wallet',
                                                                 $wallet,
+                                                                'wallet' => $wallet,
                                                             ],
                                                             $this->applyIfNotEmpty($this->requestBody, [
                                                                 'consent' => 'consent',
@@ -312,10 +330,13 @@ class RouterFactory
                                                                 'v1',
                                                                 '--network',
                                                                 $network,
+                                                                'network' => $network,
                                                                 '--wallet',
                                                                 $wallet,
+                                                                'wallet' => $wallet,
                                                                 '--web3id',
                                                                 $web3id,
+                                                                'web3id' => $web3id,
                                                             ],
                                                             $this->applyIfNotEmpty(
                                                                 $this->router->getRequest()
@@ -352,12 +373,16 @@ class RouterFactory
                                                                 'v1',
                                                                 '--consent-uuid',
                                                                 $consent_uuid,
+                                                                'consent_uuid' => $consent_uuid,
                                                                 '--network',
                                                                 $network,
+                                                                'network' => $network,
                                                                 '--wallet',
                                                                 $wallet,
+                                                                'wallet' => $wallet,
                                                                 '--web3id',
                                                                 $web3id,
+                                                                'web3id' => $web3id,
                                                             ],
                                                             $this->applyIfNotEmpty($this->requestBody, [
                                                                 'signature' => 'signature',
@@ -390,12 +415,16 @@ class RouterFactory
                                                                 'v1',
                                                                 '--visitor-uuid',
                                                                 $uuid,
+                                                                'visitor_uuid' => $uuid,
                                                                 '--network',
                                                                 $network,
+                                                                'network' => $network,
                                                                 '--wallet',
                                                                 $wallet,
+                                                                'wallet' => $wallet,
                                                                 '--web3id',
                                                                 $web3id,
+                                                                'web3id' => $web3id,
                                                             ],
                                                             $this->applyIfNotEmpty($this->requestBody, [
                                                                 'consent' => 'consent',
@@ -436,10 +465,13 @@ class RouterFactory
                                                 'v2',
                                                 '--network',
                                                 $network,
+                                                'network' => $network,
                                                 '--wallet',
                                                 $wallet,
+                                                'wallet' => $wallet,
                                                 '--web3id',
                                                 $this->getToken(),
+                                                'web3id' => $this->getToken(),
                                             ],
                                             $this->applyIfNotEmpty(
                                                 $this->router->getRequest()
@@ -472,12 +504,16 @@ class RouterFactory
                                                 'v2',
                                                 '--consent-uuid',
                                                 $consent_uuid,
+                                                'consent_uuid' => $consent_uuid,
                                                 '--network',
                                                 $network,
+                                                'network' => $network,
                                                 '--wallet',
                                                 $wallet,
+                                                'wallet' => $wallet,
                                                 '--web3id',
                                                 $this->getToken(),
+                                                'web3id' => $this->getToken(),
                                             ],
                                             $this->applyIfNotEmpty($this->requestBody, [
                                                 'signature' => 'signature',
@@ -508,12 +544,16 @@ class RouterFactory
                                                 'v2',
                                                 '--visitor-uuid',
                                                 $uuid,
+                                                'visitor_uuid' => $uuid,
                                                 '--network',
                                                 $network,
+                                                'network' => $network,
                                                 '--wallet',
                                                 $wallet,
+                                                'wallet' => $wallet,
                                                 '--web3id',
                                                 $this->getToken(),
+                                                'web3id' => $this->getToken(),  
                                             ],
                                             $this->applyIfNotEmpty($this->requestBody, [
                                                 'consent' => 'consent',
@@ -616,6 +656,7 @@ class RouterFactory
                                                     'v1',
                                                     '--uuid',
                                                     $uuid,
+                                                    'uuid' => $uuid,
                                                 ]);
                                             }))
                                                 ->setWhere(['uuid' => $this->uuidMatch])
@@ -753,8 +794,7 @@ class RouterFactory
                                                 ->getUrl()
                                                 ->getParams(),
                                             ['with' => 'with']
-                                        ),
-                                        $this->applyListParams()
+                                        )
                                     )
                                 );
                             }))
