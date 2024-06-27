@@ -15,8 +15,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Database;
 use RuntimeException;
 use Symfony\Component\Process\Process;
-use AesirxAnalytics\MysqlFactory;
-use AesirxAnalytics\MysqlHelper;
+use AesirxAnalytics\AesirxAnalyticsMysqlHelper;
 
 $folderPath = WP_PLUGIN_DIR . '/aesirx-analytics/src/Mysql';
 
@@ -89,6 +88,8 @@ class AesirxAnalyticsCli
      */
     public function processAnalytics(array $command, bool $makeExecutable = true)
     {
+        // var_dump($command);
+
        $method = $_SERVER['REQUEST_METHOD'];
 
         if ($method == "GET") {
