@@ -14,7 +14,6 @@ use AesirxAnalyticsLib\Exception\ExceptionWithErrorType;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Database;
 use RuntimeException;
-use Symfony\Component\Process\Process;
 use AesirxAnalytics\AesirxAnalyticsMysqlHelper;
 
 $folderPath = WP_PLUGIN_DIR . '/aesirx-analytics/src/Mysql';
@@ -45,39 +44,6 @@ class AesirxAnalyticsCli
         return file_exists($this->cliPath);
     }
 
-    public function getSupportedArch(): string
-    {
-        $arch = null;
-        if (PHP_OS === 'Linux') {
-            $uname = php_uname('m');
-            if (strpos($uname, 'aarch64') !== false) {
-                $arch = 'aarch64';
-            } elseif (strpos($uname, 'x86_64') !== false) {
-                $arch = 'x86_64';
-            }
-        }
-
-        if (is_null($arch)) {
-            throw new \DomainException("Unsupported architecture " . PHP_OS . " " . PHP_INT_SIZE);
-        }
-
-        return $arch;
-    }
-
-    /**
-     * @throws ExceptionWithErrorType
-     */
-    public function downloadAnalyticsCli(): void
-    {
-        $arch = $this->getSupportedArch();
-        file_put_contents(
-            $this->cliPath,
-            fopen("https://github.com/aesirxio/analytics/releases/download/2.2.10/analytics-cli-linux-" . $arch, 'r')
-        );
-        chmod($this->cliPath, 0755);
-        $this->processAnalytics(['migrate']);
-    }
-
     /**
      * @param array $command
      * @param bool  $makeExecutable
@@ -88,8 +54,6 @@ class AesirxAnalyticsCli
      */
     public function processAnalytics(array $command, bool $makeExecutable = true)
     {
-        // var_dump($command);
-
        $method = $_SERVER['REQUEST_METHOD'];
 
         if ($method == "GET") {
