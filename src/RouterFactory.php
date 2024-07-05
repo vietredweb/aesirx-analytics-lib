@@ -471,7 +471,7 @@ class RouterFactory
                                                 'wallet' => $wallet,
                                                 '--web3id',
                                                 $this->getToken(),
-                                                'web3id' => $this->getToken(),
+                                                'token' => $this->getToken(),
                                             ],
                                             $this->applyIfNotEmpty(
                                                 $this->router->getRequest()
@@ -513,7 +513,7 @@ class RouterFactory
                                                 'wallet' => $wallet,
                                                 '--web3id',
                                                 $this->getToken(),
-                                                'web3id' => $this->getToken(),
+                                                'token' => $this->getToken(),
                                             ],
                                             $this->applyIfNotEmpty($this->requestBody, [
                                                 'signature' => 'signature',
@@ -553,7 +553,7 @@ class RouterFactory
                                                 'wallet' => $wallet,
                                                 '--web3id',
                                                 $this->getToken(),
-                                                'web3id' => $this->getToken(),  
+                                                'token' => $this->getToken(),  
                                             ],
                                             $this->applyIfNotEmpty($this->requestBody, [
                                                 'consent' => 'consent',
