@@ -592,7 +592,7 @@ class RouterFactory
                                                             'init',
                                                             'v1',
                                                             '--ip',
-                                                            empty($this->requestBody['ip']) ? $this->router->getRequest(
+                                                            $this->requestBody['ip'] = empty($this->requestBody['ip']) ? $this->router->getRequest(
                                                             )
                                                                 ->getIp() : $this->requestBody['ip'],
                                                         ],
@@ -680,7 +680,7 @@ class RouterFactory
                                                             'start',
                                                             'v2',
                                                             '--ip',
-                                                            empty($this->requestBody['ip']) ? $this->router->getRequest(
+                                                            $this->requestBody['ip'] = empty($this->requestBody['ip']) ? $this->router->getRequest(
                                                             )
                                                                 ->getIp() : $this->requestBody['ip'],
                                                         ],
