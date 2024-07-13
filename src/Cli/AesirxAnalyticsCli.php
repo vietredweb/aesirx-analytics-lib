@@ -219,15 +219,30 @@ class AesirxAnalyticsCli
         }
         else if ($method == "POST") {
             if ($command[0] == 'visitor') {
-    
-                switch ($command[2]) {
-                    case 'v2':
-                        $class = new \AesirX_Analytics_Start_Fingerprint();
-                        break;
-    
-                    default:
-                        $class = new \AesirX_Analytics_Not_Found();
-                        break;
+                
+                if ($command[1] == 'start') {
+
+                    switch ($command[2]) {
+                        case 'v2':
+                            $class = new \AesirX_Analytics_Start_Fingerprint();
+                            break;
+        
+                        default:
+                            $class = new \AesirX_Analytics_Not_Found();
+                            break;
+                    }
+                }
+                elseif ($command[1] == 'end') {
+
+                    switch ($command[2]) {
+                        case 'v1':
+                            $class = new \AesirX_Analytics_Close_Visitor_Event();
+                            break;
+        
+                        default:
+                            $class = new \AesirX_Analytics_Not_Found();
+                            break;
+                    }
                 }
             }
 
