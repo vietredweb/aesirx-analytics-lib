@@ -152,6 +152,10 @@ class AesirxAnalyticsCli
                     case 'events':
                         $class = new \AesirX_Analytics_Get_All_Events_Name();
                         break;
+
+                    case 'flow':
+                        $class = new \AesirX_Analytics_Get_All_Flows();
+                        break;
                     
                     case 'flows':
                         $class = new \AesirX_Analytics_Get_All_Flows();
