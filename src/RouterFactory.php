@@ -879,6 +879,15 @@ class RouterFactory
                                                     '--end',
                                                     $end,
                                                 ],
+                                                $this->applyIfNotEmpty(
+                                                    $this->router->getRequest()
+                                                        ->getUrl()
+                                                        ->getParams(),
+                                                    [
+                                                        'start' => $start,
+                                                        'end' => $end
+                                                        ]
+                                                ),
                                                 $this->applyListParams()
                                             )
                                         );
