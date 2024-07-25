@@ -266,6 +266,18 @@ class AesirxAnalyticsCli
                 }  
             }
 
+            if ($command[0] == 'conversion') {
+                switch ($command[1]) {
+                    case 'replace':
+                        $class = new \AesirX_Analytics_Conversion_Replace();
+                        break;
+                        
+                    default:
+                        $class = new \AesirX_Analytics_Not_Found();
+                        break;
+                }  
+            }
+
             if ($command[0] == 'consent') {
                 switch ($command[1]) {
                     case 'level1':
