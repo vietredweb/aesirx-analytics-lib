@@ -269,7 +269,7 @@ class AesirxAnalyticsCli
             if ($command[0] == 'conversion') {
                 switch ($command[1]) {
                     case 'replace':
-                        $class = new \AesirX_Analytics_Job_Geo();
+                        $class = new \AesirX_Analytics_Conversion_Replace();
                         break;
                         
                     default:
