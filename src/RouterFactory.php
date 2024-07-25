@@ -730,7 +730,7 @@ class RouterFactory
                                                 '--end',
                                                 $end
                                             ],
-                                            $this->applyListParams()
+                                            $this->applyListParams($start, $end)
                                         )
                                     );
                                 }
@@ -753,7 +753,7 @@ class RouterFactory
                                                 '--end',
                                                 $end
                                             ],
-                                            $this->applyListParams()
+                                            $this->applyListParams($start, $end)
                                         )
                                     );
                                 }
@@ -776,7 +776,7 @@ class RouterFactory
                                                 '--end',
                                                 $end
                                             ],
-                                            $this->applyListParams()
+                                            $this->applyListParams($start, $end)
                                         )
                                     );
                                 }
@@ -807,7 +807,7 @@ class RouterFactory
                                     $this->callback,
                                     array_merge(
                                         ['get', 'flows', 'v1', '--start', $start, '--end', $end],
-                                        $this->applyListParams()
+                                        $this->applyListParams($start, $end)
                                     )
                                 );
                             }))
@@ -819,7 +819,7 @@ class RouterFactory
                                     $this->callback,
                                     array_merge(
                                         ['get', 'flows-date', 'v1', '--start', $start, '--end', $end],
-                                        $this->applyListParams()
+                                        $this->applyListParams($start, $end)
                                     )
                                 );
                             }))
@@ -831,7 +831,7 @@ class RouterFactory
                                     $this->callback,
                                     array_merge(
                                         ['get', 'events', 'v1', '--start', $start, '--end', $end],
-                                        $this->applyListParams()
+                                        $this->applyListParams($start, $end)
                                     )
                                 );
                             }))
@@ -879,7 +879,7 @@ class RouterFactory
                                                     '--end',
                                                     $end,
                                                 ],
-                                                $this->applyListParams()
+                                                $this->applyListParams($start, $end)
                                             )
                                         );
                                     }
@@ -917,7 +917,7 @@ class RouterFactory
                                                 "end" => $end,
                                                 $end
                                             ],
-                                            $this->applyListParams()
+                                            $this->applyListParams($start, $end)
                                         )
                                     );
                                 }
@@ -940,7 +940,7 @@ class RouterFactory
                                                 '--end',
                                                 $end
                                             ],
-                                            $this->applyListParams()
+                                            $this->applyListParams($start, $end)
                                         )
                                     );
                                 }
@@ -963,7 +963,7 @@ class RouterFactory
                                                 '--end',
                                                 $end
                                             ],
-                                            $this->applyListParams()
+                                            $this->applyListParams($start, $end)
                                         )
                                     );
                                 }
@@ -986,7 +986,7 @@ class RouterFactory
                                                 '--end',
                                                 $end
                                             ],
-                                            $this->applyListParams()
+                                            $this->applyListParams($start, $end)
                                         )
                                     );
                                 }
@@ -1027,9 +1027,17 @@ class RouterFactory
         return $command;
     }
 
-    private function applyListParams(): array
+    private function applyListParams($start = null, $end = null): array
     {
         $command = $this->router->getRequest()->getUrl()->getParams();
+
+        if ($start) {
+            $command['filter']['start'] = $start;
+        }
+
+        if ($end) {
+            $command['filter']['end'] = $end;
+        }
 
         foreach (
             $this->router->getRequest()
