@@ -788,7 +788,7 @@ class RouterFactory
                                 return call_user_func(
                                     $this->callback,
                                     array_merge(
-                                        ['get', 'flow', 'v1', $flowUuid],
+                                        ['get', 'flow', 'v1', 'flow_uuid' => $flowUuid],
                                         $this->applyIfNotEmpty(
                                             $this->router->getRequest()
                                                 ->getUrl()
