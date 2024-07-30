@@ -114,26 +114,48 @@ class RouterFactory
                 ->setCallback(
                     function () {
                         $this->router->addRoute(
-                            (new RouteUrl(
-                                '/level1/{uuid}/{consent}',
-                                function (string $uuid, string $consent) {
-                                    return call_user_func(
-                                        $this->callback,
-                                        [
-                                            'consent',
-                                            'level1',
-                                            'v1',
-                                            '--uuid',
-                                            $uuid,
-                                            'uuid' => $uuid,
-                                            '--consent',
-                                            $consent,
-                                            'consent' => $consent,
-                                        ]
-                                    );
-                                }
-                            ))
-                                ->setRequestMethods([Request::REQUEST_TYPE_POST])
+                            (new RouteGroup())
+                                ->setSettings(['prefix' => '/level1'])
+                                ->setCallback(
+                                    function () {
+                                        $this->router->addRoute(
+                                            (new RouteUrl(
+                                                '/{uuid}/{consent}',
+                                                function (string $uuid, string $consent) {
+                                                    return call_user_func( $this->callback, [
+                                                            'consent',
+                                                            'level1',
+                                                            'v1',
+                                                            '--uuid',
+                                                            $uuid,
+                                                            'uuid' => $uuid,
+                                                            '--consent',
+                                                            $consent,
+                                                            'consent' => $consent,
+                                                    ]);
+                                                }
+                                            ))
+                                                ->setRequestMethods([Request::REQUEST_TYPE_POST])
+                                        );
+                                        $this->router->addRoute(
+                                            (new RouteUrl(
+                                                '/revoke/{visitor_uuid}',
+                                                function (string $visitor_uuid) {
+                                                    return call_user_func($this->callback, [
+                                                        'revoke',
+                                                        'level1',
+                                                        'v1',
+                                                        '--visitor-uuid',
+                                                        $visitor_uuid,
+                                                        'visitor_uuid' => $visitor_uuid,
+                                                    ]);
+                                                }
+                                            ))
+                                                ->setWhere(['visitor_uuid' => $this->uuidMatch])
+                                                ->setRequestMethods([Request::REQUEST_TYPE_PUT])
+                                        );
+                                    }
+                                )
                         );
 
                         $this->router->addRoute(
