@@ -810,7 +810,7 @@ class RouterFactory
                                 return call_user_func(
                                     $this->callback,
                                     array_merge(
-                                        ['get', 'flow', 'v1', $flowUuid],
+                                        ['get', 'flow', 'v1', 'flow_uuid' => $flowUuid],
                                         $this->applyIfNotEmpty(
                                             $this->router->getRequest()
                                                 ->getUrl()
@@ -1007,6 +1007,72 @@ class RouterFactory
                                                 $start,
                                                 '--end',
                                                 $end
+                                            ],
+                                            $this->applyListParams($start, $end)
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                    }
+                )
+        );
+
+        $this->router->addRoute(
+            (new RouteGroup())
+                ->setSettings([
+                    'prefix' => '/live_visitors',
+                    'middleware' => [$permissionCheckMiddleware],
+                ])
+                ->setCallback(
+                    function () {
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/list',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'live-visitors',
+                                                'list',
+                                            ],
+                                            $this->applyListParams($start, $end)
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/total',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'live-visitors',
+                                                'total',
+                                            ],
+                                            $this->applyListParams($start, $end)
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/device',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'live-visitors',
+                                                'device',
                                             ],
                                             $this->applyListParams($start, $end)
                                         )

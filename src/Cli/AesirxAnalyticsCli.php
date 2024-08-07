@@ -220,6 +220,27 @@ class AesirxAnalyticsCli
                         break;
                 }
             }
+
+            if ($command[0] == 'live-visitors') {
+    
+                switch ($command[1]) {
+                    case 'list':
+                        $class = new \AesirX_Analytics_Get_Live_Visitors_List();
+                        break;
+    
+                    case 'total':
+                        $class = new \AesirX_Analytics_Get_Live_Visitors_Total();
+                        break;
+                    
+                    case 'device':
+                        $class = new \AesirX_Analytics_Get_Live_Visitors_Device();
+                        break;
+                    
+                    default:
+                        $class = new \AesirX_Analytics_Not_Found();
+                        break;
+                }
+            }
         }
         else if ($method == "POST") {
             if ($command[0] == 'visitor') {
@@ -258,6 +279,18 @@ class AesirxAnalyticsCli
                 switch ($command[1]) {
                     case 'geo':
                         $class = new \AesirX_Analytics_Job_Geo();
+                        break;
+                        
+                    default:
+                        $class = new \AesirX_Analytics_Not_Found();
+                        break;
+                }  
+            }
+
+            if ($command[0] == 'conversion') {
+                switch ($command[1]) {
+                    case 'replace':
+                        $class = new \AesirX_Analytics_Conversion_Replace();
                         break;
                         
                     default:
