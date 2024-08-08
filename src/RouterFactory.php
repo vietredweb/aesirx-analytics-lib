@@ -1018,6 +1018,72 @@ class RouterFactory
                     }
                 )
         );
+
+        $this->router->addRoute(
+            (new RouteGroup())
+                ->setSettings([
+                    'prefix' => '/live_visitors',
+                    'middleware' => [$permissionCheckMiddleware],
+                ])
+                ->setCallback(
+                    function () {
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/list',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'live-visitors',
+                                                'list',
+                                            ],
+                                            $this->applyListParams($start, $end)
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/total',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'live-visitors',
+                                                'total',
+                                            ],
+                                            $this->applyListParams($start, $end)
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/device',
+                                function (string $start, string $end) {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'live-visitors',
+                                                'device',
+                                            ],
+                                            $this->applyListParams($start, $end)
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                    }
+                )
+        );
     }
 
     private function getToken(): string
