@@ -1030,7 +1030,7 @@ class RouterFactory
                         $this->router->addRoute(
                             (new RouteUrl(
                                 '/list',
-                                function (string $start, string $end) {
+                                function () {
                                     return call_user_func(
                                         $this->callback,
                                         array_merge(
@@ -1038,7 +1038,7 @@ class RouterFactory
                                                 'live-visitors',
                                                 'list',
                                             ],
-                                            $this->applyListParams($start, $end)
+                                            $this->applyListParams()
                                         )
                                     );
                                 }
@@ -1048,7 +1048,7 @@ class RouterFactory
                         $this->router->addRoute(
                             (new RouteUrl(
                                 '/total',
-                                function (string $start, string $end) {
+                                function () {
                                     return call_user_func(
                                         $this->callback,
                                         array_merge(
@@ -1056,7 +1056,7 @@ class RouterFactory
                                                 'live-visitors',
                                                 'total',
                                             ],
-                                            $this->applyListParams($start, $end)
+                                            $this->applyListParams()
                                         )
                                     );
                                 }
@@ -1066,7 +1066,7 @@ class RouterFactory
                         $this->router->addRoute(
                             (new RouteUrl(
                                 '/device',
-                                function (string $start, string $end) {
+                                function () {
                                     return call_user_func(
                                         $this->callback,
                                         array_merge(
@@ -1074,7 +1074,7 @@ class RouterFactory
                                                 'live-visitors',
                                                 'device',
                                             ],
-                                            $this->applyListParams($start, $end)
+                                            $this->applyListParams()
                                         )
                                     );
                                 }
@@ -1084,6 +1084,37 @@ class RouterFactory
                     }
                 )
         );
+
+        $this->router->addRoute(
+            (new RouteUrl('/datastream/template/' . $this->router->getRequest()->getHost(), function () {
+                return call_user_func(
+                    $this->callback,
+                    array_merge(
+                        [
+                            'datastream',
+                            'template',
+                        ],
+                    )
+                );
+            }))->setRequestMethods([Request::REQUEST_TYPE_GET])
+        );
+
+        $this->router->addRoute(
+            (new RouteUrl('/datastream/template', function () {
+                return call_user_func(
+                    $this->callback,
+                    array_merge(
+                        [
+                            'datastream',
+                            'template',
+                        ],
+                        $_POST
+                    )
+                );
+            }))->setRequestMethods([Request::REQUEST_TYPE_POST])
+        );
+
+        
     }
 
     private function getToken(): string

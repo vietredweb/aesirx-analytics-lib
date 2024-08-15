@@ -241,6 +241,10 @@ class AesirxAnalyticsCli
                         break;
                 }
             }
+
+            if ($command[0] == 'datastream') {
+                $class = new \AesirX_Analytics_Get_Datastream_Template();
+            }
         }
         else if ($method == "POST") {
             if ($command[0] == 'visitor') {
@@ -319,6 +323,11 @@ class AesirxAnalyticsCli
                         break;
                 }
             }
+
+            if ($command[0] == 'datastream') {
+                $class = new \AesirX_Analytics_Store_Datastream_Template();
+            }
+
         } else if ($method == "PUT") {
             if ($command[0] == 'revoke') {
                 switch ($command[1]) {
