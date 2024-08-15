@@ -1018,6 +1018,103 @@ class RouterFactory
                     }
                 )
         );
+
+        $this->router->addRoute(
+            (new RouteGroup())
+                ->setSettings([
+                    'prefix' => '/live_visitors',
+                    'middleware' => [$permissionCheckMiddleware],
+                ])
+                ->setCallback(
+                    function () {
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/list',
+                                function () {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'live-visitors',
+                                                'list',
+                                            ],
+                                            $this->applyListParams()
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/total',
+                                function () {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'live-visitors',
+                                                'total',
+                                            ],
+                                            $this->applyListParams()
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl(
+                                '/device',
+                                function () {
+                                    return call_user_func(
+                                        $this->callback,
+                                        array_merge(
+                                            [
+                                                'live-visitors',
+                                                'device',
+                                            ],
+                                            $this->applyListParams()
+                                        )
+                                    );
+                                }
+                            ))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                    }
+                )
+        );
+
+        $this->router->addRoute(
+            (new RouteUrl('/datastream/template/' . $this->router->getRequest()->getHost(), function () {
+                return call_user_func(
+                    $this->callback,
+                    array_merge(
+                        [
+                            'datastream',
+                            'template',
+                        ],
+                    )
+                );
+            }))->setRequestMethods([Request::REQUEST_TYPE_GET])
+        );
+
+        $this->router->addRoute(
+            (new RouteUrl('/datastream/template', function () {
+                return call_user_func(
+                    $this->callback,
+                    array_merge(
+                        [
+                            'datastream',
+                            'template',
+                        ],
+                        $_POST
+                    )
+                );
+            }))->setRequestMethods([Request::REQUEST_TYPE_POST])
+        );
+
+        
     }
 
     private function getToken(): string
