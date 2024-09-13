@@ -122,17 +122,38 @@ class RouterFactory
                                             (new RouteUrl(
                                                 '/{uuid}/{consent}',
                                                 function (string $uuid, string $consent) {
-                                                    return call_user_func( $this->callback, [
-                                                            'consent',
-                                                            'level1',
-                                                            'v1',
-                                                            '--uuid',
-                                                            $uuid,
-                                                            'uuid' => $uuid,
-                                                            '--consent',
-                                                            $consent,
-                                                            'consent' => $consent,
-                                                    ]);
+                                                    return call_user_func(
+                                                        $this->callback,
+                                                        array_merge (
+                                                            [
+                                                                'consent',
+                                                                'level1',
+                                                                'v1',
+                                                                '--uuid',
+                                                                $uuid,
+                                                                'uuid' => $uuid,
+                                                                '--consent',
+                                                                $consent,
+                                                                'consent' => $consent,
+                                                                $this->requestBody['ip'] = empty($this->requestBody['ip']) ? $this->router->getRequest(
+                                                                    )
+                                                                        ->getIp() : $this->requestBody['ip']
+                                                            ],
+                                                            $this->applyIfNotEmpty($this->requestBody, [
+                                                                'fingerprint' => 'fingerprint',
+                                                                'user_agent' => 'user-agent',
+                                                                'device' => 'device',
+                                                                'browser_name' => 'browser-name',
+                                                                'browser_version' => 'browser-version',
+                                                                'lang' => 'lang',
+                                                                'url' => 'url',
+                                                                'referer' => 'referer',
+                                                                'event_name' => 'event-name',
+                                                                'event_type' => 'event-type',
+                                                            ]),
+                                                            $this->applyAttributes()
+                                                        )
+                                                    );
                                                 }
                                             ))
                                                 ->setRequestMethods([Request::REQUEST_TYPE_POST])
@@ -211,12 +232,26 @@ class RouterFactory
                                                             '--token',
                                                             $this->getToken(),
                                                             'token' => $this->getToken(),
+                                                            $this->requestBody['ip'] = empty($this->requestBody['ip']) ? $this->router->getRequest(
+                                                                )
+                                                                    ->getIp() : $this->requestBody['ip']
                                                         ],
                                                         $this->applyIfNotEmpty(
                                                             $this->requestBody,
                                                             [
                                                                 'consent' => 'consent',
-                                                            ]
+                                                                'fingerprint' => 'fingerprint',
+                                                                'user_agent' => 'user-agent',
+                                                                'device' => 'device',
+                                                                'browser_name' => 'browser-name',
+                                                                'browser_version' => 'browser-version',
+                                                                'lang' => 'lang',
+                                                                'url' => 'url',
+                                                                'referer' => 'referer',
+                                                                'event_name' => 'event-name',
+                                                                'event_type' => 'event-type',
+                                                            ],
+                                                            $this->applyAttributes()
                                                         )
                                                     )
                                                 );
@@ -318,11 +353,25 @@ class RouterFactory
                                                                 '--wallet',
                                                                 $wallet,
                                                                 'wallet' => $wallet,
+                                                                $this->requestBody['ip'] = empty($this->requestBody['ip']) ? $this->router->getRequest(
+                                                                    )
+                                                                        ->getIp() : $this->requestBody['ip']
                                                             ],
                                                             $this->applyIfNotEmpty($this->requestBody, [
                                                                 'consent' => 'consent',
                                                                 'signature' => 'signature',
-                                                            ])
+                                                                'fingerprint' => 'fingerprint',
+                                                                'user_agent' => 'user-agent',
+                                                                'device' => 'device',
+                                                                'browser_name' => 'browser-name',
+                                                                'browser_version' => 'browser-version',
+                                                                'lang' => 'lang',
+                                                                'url' => 'url',
+                                                                'referer' => 'referer',
+                                                                'event_name' => 'event-name',
+                                                                'event_type' => 'event-type',
+                                                            ]),
+                                                            $this->applyAttributes()
                                                         )
                                                     );
                                                 }
@@ -447,11 +496,25 @@ class RouterFactory
                                                                 '--web3id',
                                                                 $web3id,
                                                                 'web3id' => $web3id,
+                                                                $this->requestBody['ip'] = empty($this->requestBody['ip']) ? $this->router->getRequest(
+                                                                    )
+                                                                        ->getIp() : $this->requestBody['ip']
                                                             ],
                                                             $this->applyIfNotEmpty($this->requestBody, [
                                                                 'consent' => 'consent',
                                                                 'signature' => 'signature',
-                                                            ])
+                                                                'fingerprint' => 'fingerprint',
+                                                                'user_agent' => 'user-agent',
+                                                                'device' => 'device',
+                                                                'browser_name' => 'browser-name',
+                                                                'browser_version' => 'browser-version',
+                                                                'lang' => 'lang',
+                                                                'url' => 'url',
+                                                                'referer' => 'referer',
+                                                                'event_name' => 'event-name',
+                                                                'event_type' => 'event-type',
+                                                            ]),
+                                                            $this->applyAttributes()
                                                         )
                                                     );
                                                 }
@@ -575,11 +638,24 @@ class RouterFactory
                                                 'wallet' => $wallet,
                                                 '--web3id',
                                                 $this->getToken(),
-                                                'token' => $this->getToken(),  
+                                                'token' => $this->getToken(),
+                                                $this->requestBody['ip'] = empty($this->requestBody['ip']) ? $this->router->getRequest(
+                                                    )
+                                                        ->getIp() : $this->requestBody['ip']
                                             ],
                                             $this->applyIfNotEmpty($this->requestBody, [
                                                 'consent' => 'consent',
                                                 'signature' => 'signature',
+                                                'fingerprint' => 'fingerprint',
+                                                'user_agent' => 'user-agent',
+                                                'device' => 'device',
+                                                'browser_name' => 'browser-name',
+                                                'browser_version' => 'browser-version',
+                                                'lang' => 'lang',
+                                                'url' => 'url',
+                                                'referer' => 'referer',
+                                                'event_name' => 'event-name',
+                                                'event_type' => 'event-type',
                                             ])
                                         )
                                     );
