@@ -935,6 +935,51 @@ class RouterFactory
                             }))
                                 ->setRequestMethods([Request::REQUEST_TYPE_GET])
                         );
+                        $this->router->addRoute(
+                            (new RouteUrl('/live_visitors/list', function () {
+                                return call_user_func(
+                                    $this->callback,
+                                    array_merge(
+                                        [
+                                            'live-visitors',
+                                            'list',
+                                        ],
+                                        $this->applyListParams()
+                                    )
+                                );
+                            }))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl('/live_visitors/total', function () {
+                                return call_user_func(
+                                    $this->callback,
+                                    array_merge(
+                                        [
+                                            'live-visitors',
+                                            'total',
+                                        ],
+                                        $this->applyListParams()
+                                    )
+                                );
+                            }))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
+                        $this->router->addRoute(
+                            (new RouteUrl('/live_visitors/device', function () {
+                                return call_user_func(
+                                    $this->callback,
+                                    array_merge(
+                                        [
+                                            'live-visitors',
+                                            'device',
+                                        ],
+                                        $this->applyListParams()
+                                    )
+                                );
+                            }))
+                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
+                        );
                         foreach (
                             [
                                 'visits',
@@ -1085,72 +1130,6 @@ class RouterFactory
                                                 $end
                                             ],
                                             $this->applyListParams($start, $end)
-                                        )
-                                    );
-                                }
-                            ))
-                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
-                        );
-                    }
-                )
-        );
-
-        $this->router->addRoute(
-            (new RouteGroup())
-                ->setSettings([
-                    'prefix' => '/live_visitors',
-                    'middleware' => [$permissionCheckMiddleware],
-                ])
-                ->setCallback(
-                    function () {
-                        $this->router->addRoute(
-                            (new RouteUrl(
-                                '/list',
-                                function () {
-                                    return call_user_func(
-                                        $this->callback,
-                                        array_merge(
-                                            [
-                                                'live-visitors',
-                                                'list',
-                                            ],
-                                            $this->applyListParams()
-                                        )
-                                    );
-                                }
-                            ))
-                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
-                        );
-                        $this->router->addRoute(
-                            (new RouteUrl(
-                                '/total',
-                                function () {
-                                    return call_user_func(
-                                        $this->callback,
-                                        array_merge(
-                                            [
-                                                'live-visitors',
-                                                'total',
-                                            ],
-                                            $this->applyListParams()
-                                        )
-                                    );
-                                }
-                            ))
-                                ->setRequestMethods([Request::REQUEST_TYPE_GET])
-                        );
-                        $this->router->addRoute(
-                            (new RouteUrl(
-                                '/device',
-                                function () {
-                                    return call_user_func(
-                                        $this->callback,
-                                        array_merge(
-                                            [
-                                                'live-visitors',
-                                                'device',
-                                            ],
-                                            $this->applyListParams()
                                         )
                                     );
                                 }
