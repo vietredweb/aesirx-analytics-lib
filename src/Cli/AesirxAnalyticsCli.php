@@ -16,7 +16,13 @@ use Drupal\Core\Database\Database;
 use RuntimeException;
 use AesirxAnalytics\AesirxAnalyticsMysqlHelper;
 
-$folderPath = WP_PLUGIN_DIR . '/aesirx-analytics/src/Mysql';
+if (defined('JPATH_PLUGINS')) {
+    // Joomla detected
+    $folderPath = JPATH_PLUGINS . '/system/aesirx_analytics/src/Mysql';
+} elseif (defined('WP_PLUGIN_DIR')) {
+    // WordPress detected
+    $folderPath = WP_PLUGIN_DIR . '/aesirx-analytics/src/Mysql';
+}
 
 $files = glob($folderPath . '/*.php');
 
