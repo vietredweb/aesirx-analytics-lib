@@ -60,7 +60,19 @@ class AesirxAnalyticsCli
      */
     public function processAnalytics(array $command, bool $makeExecutable = true)
     {
-       $method = $_SERVER['REQUEST_METHOD'];
+        $method = $_SERVER['REQUEST_METHOD'];
+
+        if ($command[0] == 'job') {
+            switch ($command[1]) {
+                case 'geo':
+                    $class = new \AesirX_Analytics_Job_Geo();
+                    break;
+                    
+                default:
+                    $class = new \AesirX_Analytics_Not_Found();
+                    break;
+            }  
+        }
 
         if ($method == "GET") {
             if ($command[0] == 'statistics') {
@@ -283,18 +295,6 @@ class AesirxAnalyticsCli
 
             if ($command[0] == 'wallet') {
                 $class = new \AesirX_Analytics_Get_Nonce();
-            }
-
-            if ($command[0] == 'job') {
-                switch ($command[1]) {
-                    case 'geo':
-                        $class = new \AesirX_Analytics_Job_Geo();
-                        break;
-                        
-                    default:
-                        $class = new \AesirX_Analytics_Not_Found();
-                        break;
-                }  
             }
 
             if ($command[0] == 'conversion') {
