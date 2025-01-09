@@ -240,11 +240,27 @@ class AesirxAnalyticsCli
             }
 
             if ($command[0] == 'live-visitors') {
-                var_dump('live-visitors');
+    
+                switch ($command[1]) {
+                    case 'list':
+                        $class = new \AesirX_Analytics_Get_Live_Visitors_List();
+                        break;
+    
+                    case 'total':
+                        $class = new \AesirX_Analytics_Get_Live_Visitors_Total();
+                        break;
+                    
+                    case 'device':
+                        $class = new \AesirX_Analytics_Get_Live_Visitors_Device();
+                        break;
+                    
+                    default:
+                        $class = new \AesirX_Analytics_Not_Found();
+                        break;
+                }
             }
 
             if ($command[0] == 'datastream') {
-                var_dump('testne');
                 $class = new \AesirX_Analytics_Get_Datastream_Template();
             }
         }
