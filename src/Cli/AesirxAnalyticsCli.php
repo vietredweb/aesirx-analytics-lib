@@ -240,12 +240,11 @@ class AesirxAnalyticsCli
             }
 
             if ($command[0] == 'live-visitors') {
-    
-                
+                var_dump('live-visitors');
             }
 
             if ($command[0] == 'datastream') {
-                var_dump('testne');die;
+                var_dump('testne');
                 $class = new \AesirX_Analytics_Get_Datastream_Template();
             }
         }
