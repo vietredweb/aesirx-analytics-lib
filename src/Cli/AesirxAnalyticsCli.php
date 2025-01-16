@@ -18,18 +18,23 @@ use AesirxAnalytics\AesirxAnalyticsMysqlHelper;
 
 if (defined('JPATH_PLUGINS')) {
     // Joomla detected
-    $folderPath = JPATH_PLUGINS . '/system/aesirx_analytics/src/Mysql';
+    $folderPaths = [
+        JPATH_PLUGINS . '/system/aesirx_analytics/src/Mysql',
+        JPATH_PLUGINS . '/system/aesirx_consent/src/Mysql',
+    ];
 } elseif (defined('WP_PLUGIN_DIR')) {
     // WordPress detected
-    $folderPath = WP_PLUGIN_DIR . '/aesirx-analytics/src/Mysql';
+    $folderPaths = [
+        WP_PLUGIN_DIR . '/aesirx-analytics/src/Mysql',
+        WP_PLUGIN_DIR . '/aesirx-consent/src/Mysql',
+    ];
 }
-
-$files = glob($folderPath . '/*.php');
-
-foreach ($files as $file) {
-    include_once $file;
+foreach ($folderPaths as $folderPath) {
+    $files = glob($folderPath . '/*.php');
+    foreach ($files as $file) {
+        include_once $file;
+    }
 }
-
 /**
  * @since 1.0.0
  */
