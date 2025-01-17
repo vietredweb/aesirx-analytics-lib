@@ -18,18 +18,15 @@ use AesirxAnalytics\AesirxAnalyticsMysqlHelper;
 
 if (defined('JPATH_PLUGINS')) {
     // Joomla detected
-    $folderPaths = [
-        JPATH_PLUGINS . '/system/aesirx_analytics/src/Mysql',
-        JPATH_PLUGINS . '/system/aesirx_consent/src/Mysql',
-    ];
+    $analyticsFolder = JPATH_PLUGINS . '/system/aesirx_analytics/src/Mysql';
+    $consentFolder = JPATH_PLUGINS . '/system/aesirx_consent/src/Mysql';
 } elseif (defined('WP_PLUGIN_DIR')) {
     // WordPress detected
-    $folderPaths = [
-        WP_PLUGIN_DIR . '/aesirx-analytics/src/Mysql',
-        WP_PLUGIN_DIR . '/aesirx-consent/src/Mysql',
-    ];
+    $analyticsFolder = WP_PLUGIN_DIR . '/aesirx-analytics/src/Mysql';
+    $consentFolder = WP_PLUGIN_DIR . '/aesirx-consent/src/Mysql';
 }
-foreach ($folderPaths as $folderPath) {
+$folderPath = is_dir($analyticsFolder) ? $analyticsFolder : $consentFolder;
+if (is_dir($folderPath)) {
     $files = glob($folderPath . '/*.php');
     foreach ($files as $file) {
         include_once $file;
