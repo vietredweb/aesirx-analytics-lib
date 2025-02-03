@@ -361,6 +361,6 @@ class AesirxAnalyticsCli
 
         $data = $class->aesirx_analytics_mysql_execute($command);  
 
-        return json_encode($data);
+        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 }
